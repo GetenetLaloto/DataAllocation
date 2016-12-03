@@ -2,21 +2,28 @@ import java.util.HashMap;
 import java.util.Random;
 
 public class Main {
-	
 	DataPiece[] disk; //the disk is an array cause it's a fixed size
 	//int diskSize; //size of disk just to stop from using .length on array
-	HashMap<String, DataPiece[]> data; //
+	HashMap<String, DataPiece[]> data; 
+	final String[] fileNames; //contains all filenames
+	
+	final static int tries = 4; //number of tries to put in the whole block in disk
+	final static Random rand = new Random(); //lots of random numbers needed
+	final static int maxFileSize = 10;
 	
 	/**
 	 * constructor only takes one argument disk size
 	 * @param diskSize the size of the emulated disk
 	 */
 	public Main(int diskSize){
-	//	this.diskSize = diskSize;
+		
 		disk = new DataPiece[diskSize];
 		
 		//fill the hashmap with data
 		data = generateData(diskSize);
+		
+		//all file name
+		fileNames = (String[]) data.keySet().toArray();
 	}
 	
 	/**
@@ -32,7 +39,7 @@ public class Main {
 		
 		//add random amount of files with random number of pieces each
 		while(diskSize - total > 10){
-			DataPiece[] filePieces = new DataPiece[(new Random()).nextInt(10)]; //make a random size array
+			DataPiece[] filePieces = new DataPiece[rand.nextInt(maxFileSize)]; //make a random size array
 			for(int pieceNum = 0; pieceNum < filePieces.length; pieceNum++){
 				//in here instead of empty constructor, use the one with next to use the linked data 
 				//how it's meant to be used
@@ -63,8 +70,68 @@ public class Main {
 		disk = new DataPiece[disk.length];
 	}
 	
+	/**
+	 * this helper method checks all the file pieces fit in one continuous block in the disk
+	 * @param index the index number it wants to be placed
+	 * @param sizeFile how many blocks it takes
+	 * @return true if it fits else returns false
+	 */
+	private boolean fitsDisk(int index, int sizeFile){
+		for(int i = 0; i < sizeFile; i++){
+			if(disk[(index+i) % disk.length]!=null){
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	/**
+	 * 
+	 */
 	public void ContiguousAllocation(){
 		this.emptyDisk(); //clear the disk
+		//go through all files
+		for(String file: fileNames){
+			DataPiece[] filePieces = data.get(file); 
+			boolean inDisk = false; //tracks if the file fit in the disk
+			int index = 0;
+			for(int tryNum = 0; tryNum < tries; tryNum++){
+				//NEEDS TO BE FIX SO IT WONT REPEAT THE SAME NUMBER
+				index = rand.nextInt(disk.length); //the random index that would be checked 
+				
+				if(fitsDisk(index,filePieces.length)){
+					inDisk = true;
+					break;
+				}
+			}
+			//if the file fits in disk contiguously then this is the right way
+			if(inDisk){
+				for(DataPiece piece: filePieces){
+					disk[index++ % disk.length] = piece; //NEED TO TEST THIS PART
+				}
+			}
+			
+			//else check in order to find a spot
+			else{
+				int current = 0;
+				while(current < disk.length+maxFileSize){
+					if(fitsDisk(current%disk.length, filePieces.length)){
+						for(DataPiece piece: filePieces){
+							disk[current++ % disk.length] = piece; //NEED TO TEST THIS PART
+						}
+						break; //break cause you file was added to the disk
+					}
+					else{
+						current+=filePieces.length;
+					}
+				}
+				
+				//if all else fails that means you are out off the while loop 
+				//and there is no space for it at least not together
+				//this is where you count how many pieces failed
+				
+			}
+		}
 		
 	}
 	
