@@ -20,6 +20,7 @@ public class Main {
 	}
 	
 	/**
+	 * NEEDS TO BE TESTED
 	 * This method generates random data files with random size but all together will fit in a disk and fill it
 	 * @param diskSize the size of the disk
 	 * @return a hashmap where the key is the filename and value is an array of its pieces
@@ -52,6 +53,24 @@ public class Main {
 		total+=filePieces.length;
 		
 		return data;
+	}
+	
+	/**
+	 * this helper method just replace the disk with an empty one, (let the garbage collector worry about the other one)
+	 * @param disk the disk to be cleared 
+	 */
+	private void emptyDisk(){
+		disk = new DataPiece[disk.length];
+	}
+	
+	public void ContiguousAllocation(){
+		this.emptyDisk(); //clear the disk
+		
+	}
+	
+	public void LinkedAllocation(){
+		this.emptyDisk(); //clear the disk
+		
 	}
 	
 	
