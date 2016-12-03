@@ -20,9 +20,9 @@ public class Main {
 	}
 	
 	/**
-	 * 
-	 * @param diskSize
-	 * @return
+	 * This method generates random data files with random size but all together will fit in a disk and fill it
+	 * @param diskSize the size of the disk
+	 * @return a hashmap where the key is the filename and value is an array of its pieces
 	 */
 	private HashMap<String, DataPiece[]> generateData(int diskSize){
 		HashMap<String, DataPiece[]> data = new HashMap<>();
