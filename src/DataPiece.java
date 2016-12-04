@@ -7,10 +7,12 @@
 
 public class DataPiece {
 	
-	DataPiece next;
+	DataPiece next; //the next DataPiece
+	int index; //what index is it located in
 	
 	public DataPiece(DataPiece next){
 		this.next = next;
+		//this.index = index;
 	}
 	
 	public DataPiece(){

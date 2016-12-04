@@ -1,6 +1,14 @@
+
 import java.util.HashMap;
 import java.util.Random;
-
+/**
+ * THINGS TO DO
+ * add counter on contiguosuallocation
+ * finish Linked allocation
+ * need to separate contiguous and linked to another class to handle next and index numbers better in datapiece
+ * @author josuerojas
+ *
+ */
 public class Main {
 	DataPiece[] disk; //the disk is an array cause it's a fixed size
 	//int diskSize; //size of disk just to stop from using .length on array
@@ -137,6 +145,38 @@ public class Main {
 	
 	public void LinkedAllocation(){
 		this.emptyDisk(); //clear the disk
+		//SAME AS CONTIGUOUS BUT...
+		//go through all files
+		for(String file: fileNames){
+			DataPiece[] filePieces = data.get(file); 
+			boolean inDisk = false; //tracks if the file fit in the disk
+			int index = 0;
+			for(int tryNum = 0; tryNum < tries; tryNum++){
+				//NEEDS TO BE FIX SO IT WONT REPEAT THE SAME NUMBER
+				index = rand.nextInt(disk.length); //the random index that would be checked 
+				
+				if(fitsDisk(index,filePieces.length)){
+					inDisk = true;
+					break;
+				}
+			}
+			//if the file fits in disk contiguously then this is the right way
+			if(inDisk){
+				for(DataPiece piece: filePieces){
+					disk[index++ % disk.length] = piece; //NEED TO TEST THIS PART
+				}
+			}
+			//..IT DOES NOT GO IN ORDER TRYING TO FIND A PLACE FOR THE WHOLE BLOCK
+			//INSTEAD SPLITS THE BLOCK TO FIT IN THE SPACE
+			else{
+				index = 0;
+				for(DataPiece piece: filePieces){
+					while(disk[index] != null) index++;
+					if(disk[index] == null) disk[index] = piece;
+				}
+			}
+		}
+		
 		
 	}
 	
@@ -144,8 +184,7 @@ public class Main {
 	
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
+		//testing goes here
 	}
 
 }
