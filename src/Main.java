@@ -4,19 +4,21 @@ import java.util.Random;
 /**
  * THINGS TO DO
  * add counter on contiguosuallocation
- * finish Linked allocation
  * need to separate contiguous and linked to another class to handle next and index numbers better in datapiece
+ * maybe make a parent class for allocation since they start the same
  * @author josuerojas
  *
  */
 public class Main {
+	
 	DataPiece[] disk; //the disk is an array cause it's a fixed size
-	//int diskSize; //size of disk just to stop from using .length on array
 	HashMap<String, DataPiece[]> data; 
 	final String[] fileNames; //contains all filenames
+	int totalFiles;
+	int numReject = 0; 
 	
-	final static int tries = 4; //number of tries to put in the whole block in disk
-	final static Random rand = new Random(); //lots of random numbers needed
+	final private static int tries = 4; //number of tries to put in the whole block in disk
+	final private static Random rand = new Random(); //lots of random numbers needed
 	final static int maxFileSize = 10;
 	
 	/**
@@ -30,8 +32,11 @@ public class Main {
 		//fill the hashmap with data
 		data = generateData(diskSize);
 		
+		
 		//all file name
-		fileNames = (String[]) data.keySet().toArray();
+		fileNames = (data.keySet().toArray(new String[0]));
+		totalFiles = fileNames.length;
+		
 	}
 	
 	/**
@@ -54,10 +59,9 @@ public class Main {
 				filePieces[pieceNum] = new DataPiece();
 			}
 			
-			data.put("file"+(fileNameSuffix++), filePieces); //put in hashmap with proper name
+			data.put("file_"+(fileNameSuffix++), filePieces); //put in hashmap with proper name
 			total+= filePieces.length; //update the total so it wont 
 		}
-		
 		
 		//add the last pieces of whatever is left
 		DataPiece[] filePieces = new DataPiece[(diskSize - total)];
@@ -137,6 +141,7 @@ public class Main {
 				//if all else fails that means you are out off the while loop 
 				//and there is no space for it at least not together
 				//this is where you count how many pieces failed
+				numReject++;
 				
 			}
 		}
@@ -180,11 +185,17 @@ public class Main {
 		
 	}
 	
+	public void test(){
+		
+	}
+	
 	
 	
 
 	public static void main(String[] args) {
 		//testing goes here
+		Main test1 = new Main(100);
+		
 	}
 
 }
