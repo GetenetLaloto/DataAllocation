@@ -17,9 +17,11 @@ public class Main {
 	int totalFiles;
 	int numReject = 0; 
 	
-	final private static int tries = 4; //number of tries to put in the whole block in disk
+	private static int tries = 100; //number of tries to put in the whole block in disk
 	final private static Random rand = new Random(); //lots of random numbers needed
-	final static int maxFileSize = 10;
+	static int maxFileSize = 10;
+	static int minFileSize = 1;
+	//static ArrayList<Integer> 
 	
 	/**
 	 * constructor only takes one argument disk size
@@ -31,6 +33,7 @@ public class Main {
 		
 		//fill the hashmap with data
 		data = generateData(diskSize);
+		tries = diskSize;
 		
 		
 		//all file name
@@ -52,11 +55,13 @@ public class Main {
 		
 		//add random amount of files with random number of pieces each
 		while(diskSize - total > 10){
-			DataPiece[] filePieces = new DataPiece[rand.nextInt(maxFileSize)]; //make a random size array
+			DataPiece[] filePieces = new DataPiece[(rand.nextInt(maxFileSize -minFileSize+1))+minFileSize]; //make a random size array
 			for(int pieceNum = 0; pieceNum < filePieces.length; pieceNum++){
 				//in here instead of empty constructor, use the one with next to use the linked data 
 				//how it's meant to be used
 				filePieces[pieceNum] = new DataPiece();
+				if(pieceNum > 0) filePieces[pieceNum-1].setNext(filePieces[pieceNum]); //sets the next for LinkedAllocation
+				
 			}
 			
 			data.put("file_"+(fileNameSuffix++), filePieces); //put in hashmap with proper name
@@ -67,8 +72,10 @@ public class Main {
 		DataPiece[] filePieces = new DataPiece[(diskSize - total)];
 		for(int pieceNum = 0; pieceNum < (diskSize - total); pieceNum++){
 			filePieces[pieceNum] = new DataPiece();
+			if(pieceNum > 0) filePieces[pieceNum-1].setNext(filePieces[pieceNum]); //sets the next for LinkedAllocation
+
 		}
-		data.put("file"+(fileNameSuffix++), filePieces);
+		data.put("file_"+(fileNameSuffix++), filePieces);
 		total+=filePieces.length;
 		
 		return data;
@@ -108,7 +115,7 @@ public class Main {
 			boolean inDisk = false; //tracks if the file fit in the disk
 			int index = 0;
 			for(int tryNum = 0; tryNum < tries; tryNum++){
-				//NEEDS TO BE FIX SO IT WONT REPEAT THE SAME NUMBER
+				//NEEDS TO BE FIX SO IT WONT REPEAT THE SAME NUMBER BUT THIS REPETITION SHOULD BE MINIMUL SO IT SHOUDLNT MATTER
 				index = rand.nextInt(disk.length); //the random index that would be checked 
 				
 				if(fitsDisk(index,filePieces.length)){
@@ -142,6 +149,7 @@ public class Main {
 				//and there is no space for it at least not together
 				//this is where you count how many pieces failed
 				numReject++;
+				System.out.println(numReject);
 				
 			}
 		}
@@ -187,14 +195,23 @@ public class Main {
 	
 	public void test(){
 		
+		this.ContiguousAllocation();
+		this.LinkedAllocation();
+		
 	}
 	
 	
 	
 
 	public static void main(String[] args) {
-		//testing goes here
-		Main test1 = new Main(100);
+		
+		int[] disksizes = {100,200,300,400,500};
+		int[][] ranges = {{1,10},{10,20},{20,30}};
+		for(int size: disksizes){
+			for(int[] range: ranges){
+				
+			}
+		}
 		
 	}
 

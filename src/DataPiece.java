@@ -7,7 +7,7 @@
 
 public class DataPiece {
 	
-	DataPiece next; //the next DataPiece
+	DataPiece next = null; //the next DataPiece
 	int index; //what index is it located in
 	
 	public DataPiece(DataPiece next){
@@ -17,6 +17,12 @@ public class DataPiece {
 	
 	public DataPiece(){
 	}
+	
+	public void setNext(DataPiece next){
+		this.next = next;
+	}
+	
+	
 
 	
 }
