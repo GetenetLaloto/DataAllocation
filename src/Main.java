@@ -27,8 +27,10 @@ public class Main {
 	 * constructor only takes one argument disk size
 	 * @param diskSize the size of the emulated disk
 	 */
-	public Main(int diskSize, int[] rangeFileSize){
+	public Main(int diskSize, int minFileSize, int maxFileSize){
 		
+		this.minFileSize = minFileSize;
+		this.maxFileSize = maxFileSize;
 		disk = new DataPiece[diskSize];
 		
 		//fill the hashmap with data
@@ -87,7 +89,9 @@ public class Main {
 	 */
 	private void emptyDisk(){
 		disk = new DataPiece[disk.length];
+		numReject = 0; //reset here just to not make another method
 	}
+	
 	
 	/**
 	 * this helper method checks all the file pieces fit in one continuous block in the disk
@@ -194,9 +198,10 @@ public class Main {
 	}
 	
 	public void test(){
-		
-		this.ContiguousAllocation();
-		this.LinkedAllocation();
+		for(int i = 0; i < 100; i++){
+			this.ContiguousAllocation();
+			this.LinkedAllocation();
+		}
 		
 	}
 	
@@ -207,9 +212,10 @@ public class Main {
 		
 		int[] disksizes = {100,200,300,400,500};
 		int[][] ranges = {{1,10},{10,20},{20,30}};
+		
 		for(int size: disksizes){
 			for(int[] range: ranges){
-				
+				(new Main(size, range[0], range[1])).test();
 			}
 		}
 		
