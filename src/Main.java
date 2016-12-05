@@ -27,7 +27,7 @@ public class Main {
 	 * constructor only takes one argument disk size
 	 * @param diskSize the size of the emulated disk
 	 */
-	public Main(int diskSize){
+	public Main(int diskSize, int[] rangeFileSize){
 		
 		disk = new DataPiece[diskSize];
 		
