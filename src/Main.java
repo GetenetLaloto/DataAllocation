@@ -190,6 +190,8 @@ public class Main {
 					while(disk[index] != null) index++;
 					if(disk[index] == null) disk[index] = piece;
 				}
+				
+				//there theoretically should not be any fragmentation since each block gets split to fit
 			}
 		}
 		
@@ -201,7 +203,7 @@ public class Main {
 
 	public static void main(String[] args) {
 		
-		int[] disksizes = {100,200,300,400,500};
+		int[] disksizes = {100,150,200,250,300,350,400,450,500};
 		int[][] ranges = {{1,10},{10,20},{20,30}};
 		int numberTest = 100;
 		int[] missed = new int[numberTest];
@@ -227,13 +229,18 @@ public class Main {
 				System.out.println("Disk size: " + test.disk.length + "  FileSize Range:(" + test.minFileSize + ", " + test.maxFileSize + ")");
 				//System.out.println();
 				int j = 0;
+				double total = 0;
 				for(int miss: missed){
-					
-					System.out.print(((double)miss/allFiles[j++] ) * 100 + " ");
+					total += ((double)miss/allFiles[j] ) * 100;
+					System.out.print(((double)miss/allFiles[j++] ) * 100 + ", "); //
 					//System.out.print(miss+ " " + allFiles[j++] + " files   ");
+					
 					//System.out.println(allFiles[j++]);
 				}
 				System.out.println();
+				System.out.println("Average percent missed: " +  total/100);
+				System.out.println();
+
 
 				
 			}
