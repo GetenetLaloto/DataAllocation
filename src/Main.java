@@ -56,7 +56,7 @@ public class Main {
 		int fileNameSuffix = 0; //the prefix of the filename is a number
 		
 		//add random amount of files with random number of pieces each
-		while(diskSize - total > 10){
+		while(diskSize - total > maxFileSize){
 			DataPiece[] filePieces = new DataPiece[(rand.nextInt(maxFileSize -minFileSize+1))+minFileSize]; //make a random size array
 			for(int pieceNum = 0; pieceNum < filePieces.length; pieceNum++){
 				//in here instead of empty constructor, use the one with next to use the linked data 
@@ -153,7 +153,6 @@ public class Main {
 				//and there is no space for it at least not together
 				//this is where you count how many pieces failed
 				numReject++;
-				System.out.println(numReject);
 				
 			}
 		}
@@ -197,14 +196,6 @@ public class Main {
 		
 	}
 	
-	public void test(){
-		for(int i = 0; i < 100; i++){
-			this.ContiguousAllocation();
-			this.LinkedAllocation();
-		}
-		
-	}
-	
 	
 	
 
@@ -212,10 +203,39 @@ public class Main {
 		
 		int[] disksizes = {100,200,300,400,500};
 		int[][] ranges = {{1,10},{10,20},{20,30}};
-		
+		int numberTest = 100;
+		int[] missed = new int[numberTest];
+		int[] allFiles = new int[numberTest];
+
 		for(int size: disksizes){
 			for(int[] range: ranges){
-				(new Main(size, range[0], range[1])).test();
+				Main test = new Main(size, range[0], range[1]);
+				for(int i = 0; i < numberTest; i++){
+					//testing is done here
+					test = new Main(size, range[0], range[1]); //this here makes the number of files different each time
+					
+					test.ContiguousAllocation();
+					missed[i] = test.numReject;
+					allFiles[i] = test.totalFiles;
+					//System.out.println(allFiles[i]);
+
+					
+					test.LinkedAllocation();
+					
+					
+				}
+				System.out.println("Disk size: " + test.disk.length + "  FileSize Range:(" + test.minFileSize + ", " + test.maxFileSize + ")");
+				//System.out.println();
+				int j = 0;
+				for(int miss: missed){
+					
+					System.out.print(((double)miss/allFiles[j++] ) * 100 + " ");
+					//System.out.print(miss+ " " + allFiles[j++] + " files   ");
+					//System.out.println(allFiles[j++]);
+				}
+				System.out.println();
+
+				
 			}
 		}
 		
