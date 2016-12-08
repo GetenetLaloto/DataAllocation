@@ -3,7 +3,6 @@ import java.util.HashMap;
 import java.util.Random;
 /**
  * THINGS TO DO
- * add counter on contiguosuallocation
  * need to separate contiguous and linked to another class to handle next and index numbers better in datapiece
  * maybe make a parent class for allocation since they start the same
  * @author josuerojas
@@ -17,11 +16,10 @@ public class Main {
 	int totalFiles;
 	int numReject = 0; 
 	
-	private static int tries = 100; //number of tries to put in the whole block in disk
-	final private static Random rand = new Random(); //lots of random numbers needed
-	static int maxFileSize = 10;
-	static int minFileSize = 1;
-	//static ArrayList<Integer> 
+	static int tries = 100; //number of tries to put in the whole block in disk
+	final static Random rand = new Random(); //lots of random numbers needed
+	static int maxFileSize = 10; //default value
+	static int minFileSize = 1; //default value
 	
 	
 	//TESTING ITEMS CHANGE THIS TO GET DIFFERENT TEST
@@ -51,12 +49,11 @@ public class Main {
 	}
 	
 	/**
-	 * NEEDS TO BE TESTED
 	 * This method generates random data files with random size but all together will fit in a disk and fill it
 	 * @param diskSize the size of the disk
 	 * @return a hashmap where the key is the filename and value is an array of its pieces
 	 */
-	private HashMap<String, DataPiece[]> generateData(int diskSize){
+	public HashMap<String, DataPiece[]> generateData(int diskSize){
 		HashMap<String, DataPiece[]> data = new HashMap<>();
 		int total = 0; //keeps track how much data is made already
 		int fileNameSuffix = 0; //the prefix of the filename is a number
@@ -65,13 +62,9 @@ public class Main {
 		while(diskSize - total > maxFileSize){
 			DataPiece[] filePieces = new DataPiece[(rand.nextInt(maxFileSize -minFileSize+1))+minFileSize]; //make a random size array
 			for(int pieceNum = 0; pieceNum < filePieces.length; pieceNum++){
-				//in here instead of empty constructor, use the one with next to use the linked data 
-				//how it's meant to be used
 				filePieces[pieceNum] = new DataPiece();
-				if(pieceNum > 0) filePieces[pieceNum-1].setNext(filePieces[pieceNum]); //sets the next for LinkedAllocation
-				
+				if(pieceNum > 0) filePieces[pieceNum-1].setNext(filePieces[pieceNum]); //sets the next for LinkedAllocation	
 			}
-			
 			data.put("file_"+(fileNameSuffix++), filePieces); //put in hashmap with proper name
 			total+= filePieces.length; //update the total so it wont 
 		}
@@ -93,7 +86,7 @@ public class Main {
 	 * this helper method just replace the disk with an empty one, (let the garbage collector worry about the other one)
 	 * @param disk the disk to be cleared 
 	 */
-	private void emptyDisk(){
+	public void emptyDisk(){
 		disk = new DataPiece[disk.length];
 		numReject = 0; //reset here just to not make another method
 	}
@@ -105,7 +98,7 @@ public class Main {
 	 * @param sizeFile how many blocks it takes
 	 * @return true if it fits else returns false
 	 */
-	private boolean fitsDisk(int index, int sizeFile){
+	public boolean fitsDisk(int index, int sizeFile){
 		for(int i = 0; i < sizeFile; i++){
 			if(disk[(index+i) % disk.length]!=null){
 				return false;
@@ -115,7 +108,8 @@ public class Main {
 	}
 	
 	/**
-	 * 
+	 * This method places files in the disk array but only if they fit contiguously. 
+	 * It starts randomly and if it can' t be place randomly then look sequentially through the array for continuously space. 
 	 */
 	public void ContiguousAllocation(){
 		this.emptyDisk(); //clear the disk
@@ -146,7 +140,7 @@ public class Main {
 				while(current < disk.length+maxFileSize){
 					if(fitsDisk(current%disk.length, filePieces.length)){
 						for(DataPiece piece: filePieces){
-							disk[current++ % disk.length] = piece; //NEED TO TEST THIS PART
+							disk[current++ % disk.length] = piece; 
 						}
 						break; //break cause you file was added to the disk
 					}
@@ -165,6 +159,11 @@ public class Main {
 		
 	}
 	
+	/**
+	 * This method puts files or data on the disk array.
+	 * It starts randomly placing the file in a continuous block in the array.
+	 * If it can't find a contiguously block then splits the file to fit in the disk but checking the disk sequentilly.
+	 */
 	public void LinkedAllocation(){
 		this.emptyDisk(); //clear the disk
 		//SAME AS CONTIGUOUS BUT...
@@ -174,7 +173,7 @@ public class Main {
 			boolean inDisk = false; //tracks if the file fit in the disk
 			int index = 0;
 			for(int tryNum = 0; tryNum < tries; tryNum++){
-				//NEEDS TO BE FIX SO IT WONT REPEAT THE SAME NUMBER
+				//NEEDS TO BE FIX SO IT WONT REPEAT THE SAME NUMBER NOT A BIG DEAL FOR NOW
 				index = rand.nextInt(disk.length); //the random index that would be checked 
 				
 				if(fitsDisk(index,filePieces.length)){
@@ -185,7 +184,7 @@ public class Main {
 			//if the file fits in disk contiguously then this is the right way
 			if(inDisk){
 				for(DataPiece piece: filePieces){
-					disk[index++ % disk.length] = piece; //NEED TO TEST THIS PART
+					disk[index++ % disk.length] = piece; 
 				}
 			}
 			//..IT DOES NOT GO IN ORDER TRYING TO FIND A PLACE FOR THE WHOLE BLOCK
@@ -206,8 +205,7 @@ public class Main {
 		for(int i = 0; i < disk.length; i++){
 			if(disk[i] == null) System.out.println("MISSING FILE"); //if all is right it should never go here
 		}
-		
-		
+				
 	}
 	
 	
