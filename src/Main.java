@@ -23,6 +23,12 @@ public class Main {
 	static int minFileSize = 1;
 	//static ArrayList<Integer> 
 	
+	
+	//TESTING ITEMS CHANGE THIS TO GET DIFFERENT TEST
+	static final int[] disksizes = {100,150,200,250,300,350,400,450,500};
+	static final int[][] ranges = {{1,10},{10,20},{20,30}}; //ranges are arrays of min and max file sizes
+	static int numberTest = 100;
+	
 	/**
 	 * constructor only takes one argument disk size
 	 * @param diskSize the size of the emulated disk
@@ -209,9 +215,7 @@ public class Main {
 
 	public static void main(String[] args) {
 		
-		int[] disksizes = {100,150,200,250,300,350,400,450,500};
-		int[][] ranges = {{1,10},{10,20},{20,30}};
-		int numberTest = 100;
+		
 		int[] missed = new int[numberTest];
 		int[] allFiles = new int[numberTest];
 
@@ -225,26 +229,19 @@ public class Main {
 					test.ContiguousAllocation();
 					missed[i] = test.numReject;
 					allFiles[i] = test.totalFiles;
-					//System.out.println(allFiles[i]);
-
-					
-					test.LinkedAllocation();//linked allocation is always zero fragmentation
-					
-					
+					test.LinkedAllocation();//linked allocation is always zero fragmentation unless it prints that statement at the end, then there is an error in the code
+				
 				}
 				System.out.println("Disk size: " + test.disk.length + "  FileSize Range:(" + test.minFileSize + ", " + test.maxFileSize + ")");
-				//System.out.println();
 				int j = 0;
 				double total = 0;
 				for(int miss: missed){
 					total += ((double)miss/allFiles[j] ) * 100;
-					System.out.print(((double)miss/allFiles[j++] ) * 100 + ", "); //
-					//System.out.print(miss+ " " + allFiles[j++] + " files   ");
+					System.out.print(((double)miss/allFiles[j++] ) * 100 + ", "); //get the percent 
 					
-					//System.out.println(allFiles[j++]);
 				}
 				System.out.println();
-				System.out.println("Average percent missed: " +  total/100);
+				System.out.println("Average percent missed: " +  total/numberTest);
 				System.out.println();
 
 
