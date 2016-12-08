@@ -27,7 +27,7 @@ public class Main {
 	//TESTING ITEMS CHANGE THIS TO GET DIFFERENT TEST
 	static final int[] disksizes = {100,150,200,250,300,350,400,450,500};
 	static final int[][] ranges = {{1,10},{10,20},{20,30}}; //ranges are arrays of min and max file sizes
-	static int numberTest = 100;
+	static final int numberTest = 100;
 	
 	/**
 	 * constructor only takes one argument disk size
