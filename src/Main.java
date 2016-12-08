@@ -195,6 +195,12 @@ public class Main {
 			}
 		}
 		
+		//compare the disk to see if it has all the files
+		///check if there is empty space
+		for(int i = 0; i < disk.length; i++){
+			if(disk[i] == null) System.out.println("MISSING FILE"); //if all is right it should never go here
+		}
+		
 		
 	}
 	
@@ -222,7 +228,7 @@ public class Main {
 					//System.out.println(allFiles[i]);
 
 					
-					test.LinkedAllocation();
+					test.LinkedAllocation();//linked allocation is always zero fragmentation
 					
 					
 				}
