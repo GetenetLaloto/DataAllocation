@@ -9,3 +9,7 @@ To use you can run the main method as is or change some global static variables 
 Some possible [Results](https://docs.google.com/spreadsheets/d/1m-_TqUg0ArEUHpaE1chf_Gbmo6YesAnob_747L6ER-c/edit?usp=sharing)
 
 [Website](https://sites.google.com/view/josuerojas/data-alllocation)
+
+
+
+
